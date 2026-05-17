@@ -1,0 +1,81 @@
+name: Main
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version-file: ./go.mod
+          cache: true
+
+      - name: Summary Information
+        run: |
+          echo "# Push Summary" > "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "**Repository:** ${{ github.repository }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "**Push:** ${{ github.event.head_commit.message }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "**Author:** ${{ github.event.head_commit.author.name }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "**Branch:** ${{ github.ref }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Tools and versions
+        run: |
+          echo "## Tools and versions" >> "$GITHUB_STEP_SUMMARY"
+          echo "**Ubuntu Version:** $(lsb_release -ds)" >> "$GITHUB_STEP_SUMMARY"
+          echo "**Bash Version:** $(bash --version | head -n 1 | awk '{print $4}')" >> "$GITHUB_STEP_SUMMARY"
+          echo "**Git Version:** $(git --version | awk '{print $3}')" >> "$GITHUB_STEP_SUMMARY"
+          echo "**Go Version:** $(go version | awk '{print $3}')" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Format check
+        run: |
+          echo "## Format check" >> "$GITHUB_STEP_SUMMARY"
+          files=$(gofmt -l .)
+          if [ -n "$files" ]; then
+            echo "$files"
+            echo "The files above need gofmt." >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+          echo "All Go files are gofmt-formatted." >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Vet
+        run: |
+          echo "## Vet" >> "$GITHUB_STEP_SUMMARY"
+          go vet ./... | tee -a "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Test
+        run: |
+          echo "## Test report" >> "$GITHUB_STEP_SUMMARY"
+          go test -race -coverprofile=coverage.txt -covermode=atomic ./... | tee -a "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Test coverage
+        run: |
+          echo "## Test coverage" >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          go tool cover -func=coverage.txt | tee -a "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          total_coverage=$(go tool cover -func=coverage.txt | grep total | awk '{print $3}')
+          echo "**Total Coverage:** $total_coverage" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Build
+        run: |
+          echo "## Build" >> "$GITHUB_STEP_SUMMARY"
+          go build ./... | tee -a "$GITHUB_STEP_SUMMARY"
+          echo "Build completed successfully." >> "$GITHUB_STEP_SUMMARY"

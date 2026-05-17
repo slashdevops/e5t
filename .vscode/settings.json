@@ -1,0 +1,19 @@
+{
+  "cSpell.words": [
+    "betteralign",
+    "Ciphertext",
+    "Errorf",
+    "ncryp",
+    "nolint",
+    "slashdevops"
+  ],
+  "chat.tools.terminal.autoApprove": {
+    "gofmt": true,
+    "test": true,
+    "/^ruby -e 'require \"yaml\"; ARGV\\.each \\{ \\|f\\| begin; YAML\\.load_file\\(f\\); puts \"yaml ok: #\\{f\\}\"; rescue => e; puts \"yaml error: #\\{f\\}: #\\{e\\.message\\}\"; exit 1; end \\}' \\.github/dependabot\\.yml \\.github/release\\.yml \\.github/codeql/codeql-config\\.yml \\.github/workflows/main\\.yml \\.github/workflows/pr\\.yml \\.github/workflows/codeql\\.yml \\.github/workflows/release\\.yml \\.golangci\\.yaml$/": {
+      "approve": true,
+      "matchCommandLine": true
+    },
+    "actionlint": true
+  }
+}
