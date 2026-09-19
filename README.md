@@ -3,7 +3,6 @@
 [![main branch](https://github.com/slashdevops/e5t/actions/workflows/main.yml/badge.svg)](https://github.com/slashdevops/e5t/actions/workflows/main.yml)
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/slashdevops/e5t?style=plastic)
 [![Go Reference](https://pkg.go.dev/badge/github.com/slashdevops/e5t.svg)](https://pkg.go.dev/github.com/slashdevops/e5t)
-[![Go Report Card](https://goreportcard.com/badge/github.com/slashdevops/e5t)](https://goreportcard.com/report/github.com/slashdevops/e5t)
 [![license](https://img.shields.io/github/license/slashdevops/e5t.svg)](https://github.com/slashdevops/e5t/blob/main/LICENSE)
 [![Release](https://github.com/slashdevops/e5t/actions/workflows/release.yml/badge.svg)](https://github.com/slashdevops/e5t/actions/workflows/release.yml)
 
